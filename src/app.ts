@@ -19,7 +19,15 @@ const userLocks = new Map(); // New lock mechanism
  */
 const processUserMessage = async (ctx, { flowDynamic, state, provider }) => {
     await typing(ctx, provider);
-    console.log(ctx.body);
+    const mensaje = ctx.body;
+    const esBusqueda =
+        /(libro|buscar|tienen|quiero|dame|recomi[ée]ndame)\s+(.+)/i.test(mensaje) ||
+        /^[^0-9]+$/i.test(mensaje); // Si el mensaje no contiene números
+
+    if (esBusqueda) {
+        const terminoBusqueda = mensaje.replace(/(libro|buscar|tienen|quiero|dame|recomi[ée]ndame)/i, '').trim();
+        ctx.body = `buscar ${terminoBusqueda}`; // Normaliza a "buscar [término]"
+    }
 
     const response = await toAsk(ASSISTANT_ID, ctx.body, state);
 
