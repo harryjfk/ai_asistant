@@ -84,10 +84,11 @@ const disponibilidadFlow = addKeyword<BaileysProvider,MemoryDB>('libros').
     // const data = await response.json();
 
     // if (data.horarios.length === 0) {
-    await ctx.send({
-        body: '❌ No hay disponibilidad. Prueba otra fecha o hora.'
-    });
-    return;  // }
+    console.log(ctx);
+    // await ctx.send({
+    //     body: '❌ No hay disponibilidad. Prueba otra fecha o hora.'
+    // });
+    // return;  // }
 
     // // Crea botones con enlaces a tu web
     // const buttons = data.horarios.map(({ hora, link }) => ({
