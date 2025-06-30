@@ -77,26 +77,26 @@ const welcomeFlow = addKeyword<BaileysProvider, MemoryDB>(EVENTS.WELCOME)
     });
 const disponibilidadFlow = addKeyword<BaileysProvider,MemoryDB>('libros').
     addAction(async (ctx, { flowDynamic, state, provider }) => {
-    const { fecha, personas } = ctx.params;
+    // const { fecha, personas } = ctx.params;
+    //
+    // // Llama a tu API
+    // const response = await fetch(`${apiUrl}?fecha=${fecha}&personas=${personas}`);
+    // const data = await response.json();
 
-    // Llama a tu API
-    const response = await fetch(`${apiUrl}?fecha=${fecha}&personas=${personas}`);
-    const data = await response.json();
-
-    if (data.horarios.length === 0) {
+    // if (data.horarios.length === 0) {
         return ctx.send('No hay disponibilidad para esa fecha. ¿Quieres probar otro día?');
-    }
+    // }
 
-    // Crea botones con enlaces a tu web
-    const buttons = data.horarios.map(({ hora, link }) => ({
-        text: `Reservar a las ${hora}`,
-        url: link
-    }));
-
-    ctx.send({
-        text: `¡Hay mesas disponibles! Elige un horario:`,
-        buttons
-    });
+    // // Crea botones con enlaces a tu web
+    // const buttons = data.horarios.map(({ hora, link }) => ({
+    //     text: `Reservar a las ${hora}`,
+    //     url: link
+    // }));
+    //
+    // ctx.send({
+    //     text: `¡Hay mesas disponibles! Elige un horario:`,
+    //     buttons
+    // });
 
 })
 
