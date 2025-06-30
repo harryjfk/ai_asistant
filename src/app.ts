@@ -85,25 +85,25 @@ const disponibilidadFlow = addKeyword<BaileysProvider,MemoryDB>('libros').
 
     // if (data.horarios.length === 0) {
     console.log(ctx);
-    const libros = [
-        { titulo: 'Cien años de soledad', genero: 'ficcion' },
-        { titulo: 'El arte de la guerra', genero: 'no-ficcion' }
-    ];
-
-    // 2. Crear botones dinámicos
-    const buttons = libros.map(libro => ({
-        type: 'reply',
-        title: libro.titulo,
-        id: libro.genero
-    }));
-
-    // 3. Enviar mensaje interactivo
-    await ctx.sendMessage({
-        text: '📚 Libros disponibles:',
-        buttons,
-        footer: 'Responde con el número del libro'
-    });
-
+    // const libros = [
+    //     { titulo: 'Cien años de soledad', genero: 'ficcion' },
+    //     { titulo: 'El arte de la guerra', genero: 'no-ficcion' }
+    // ];
+    //
+    // // 2. Crear botones dinámicos
+    // const buttons = libros.map(libro => ({
+    //     type: 'reply',
+    //     title: libro.titulo,
+    //     id: libro.genero
+    // }));
+    //
+    // // 3. Enviar mensaje interactivo
+    // await ctx.sendMessage({
+    //     text: '📚 Libros disponibles:',
+    //     buttons,
+    //     footer: 'Responde con el número del libro'
+    // });
+    await flowDynamic([{body:'😜'}])
     // // Crea botones con enlaces a tu web
     // const buttons = data.horarios.map(({ hora, link }) => ({
     //     text: `Reservar a las ${hora}`,
