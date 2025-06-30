@@ -75,8 +75,9 @@ const welcomeFlow = addKeyword<BaileysProvider, MemoryDB>(EVENTS.WELCOME)
             await handleQueue(userId);
         }
     });
-const disponibilidadFlow = addKeyword<BaileysProvider,MemoryDB>('libros').
+const disponibilidadFlow = addKeyword<BaileysProvider,MemoryDB>('libro').
     addAction(async (ctx, { flowDynamic, state, provider }) => {
+    const { nombre } = ctx.params;
     // const { fecha, personas } = ctx.params;
     //
     // // Llama a tu API
@@ -84,11 +85,11 @@ const disponibilidadFlow = addKeyword<BaileysProvider,MemoryDB>('libros').
     // const data = await response.json();
 
     // if (data.horarios.length === 0) {
-    console.log(ctx);
-    const libros = [
-        { titulo: 'Cien años de soledad', genero: 'ficcion' },
-        { titulo: 'El arte de la guerra', genero: 'no-ficcion' }
-    ];
+    console.log(nombre);
+    // const libros = [
+    //     { titulo: 'Cien años de soledad', genero: 'ficcion' },
+    //     { titulo: 'El arte de la guerra', genero: 'no-ficcion' }
+    // ];
 
     // // 2. Crear botones dinámicos
     // const buttons1 = ;
