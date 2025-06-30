@@ -19,9 +19,11 @@ const userLocks = new Map(); // New lock mechanism
  */
 const processUserMessage = async (ctx, { flowDynamic, state, provider }) => {
     await typing(ctx, provider);
+    console.log(ctx.body);
+
     const response = await toAsk(ASSISTANT_ID, ctx.body, state);
 
-    console.log(ctx.body);
+
     // Split the response into chunks and send them sequentially
     const chunks = response.split(/\n\n+/);
     for (const chunk of chunks) {
