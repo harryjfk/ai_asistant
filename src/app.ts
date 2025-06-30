@@ -85,10 +85,24 @@ const disponibilidadFlow = addKeyword<BaileysProvider,MemoryDB>('libros').
 
     // if (data.horarios.length === 0) {
     console.log(ctx);
-    // await ctx.send({
-    //     body: '❌ No hay disponibilidad. Prueba otra fecha o hora.'
-    // });
-    // return;  // }
+    const libros = [
+        { titulo: 'Cien años de soledad', genero: 'ficcion' },
+        { titulo: 'El arte de la guerra', genero: 'no-ficcion' }
+    ];
+
+    // 2. Crear botones dinámicos
+    const buttons = libros.map(libro => ({
+        type: 'reply',
+        title: libro.titulo,
+        id: libro.genero
+    }));
+
+    // 3. Enviar mensaje interactivo
+    await ctx.sendMessage({
+        text: '📚 Libros disponibles:',
+        buttons,
+        footer: 'Responde con el número del libro'
+    });
 
     // // Crea botones con enlaces a tu web
     // const buttons = data.horarios.map(({ hora, link }) => ({
