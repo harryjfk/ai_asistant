@@ -75,7 +75,7 @@ const welcomeFlow = addKeyword<BaileysProvider, MemoryDB>(EVENTS.WELCOME)
             await handleQueue(userId);
         }
     });
-const disponibilidadFlow = addKeyword<BaileysProvider,MemoryDB>('buscar libro').
+const disponibilidadFlow = addKeyword<BaileysProvider,MemoryDB>('buscar').
     addAction(async (ctx, { flowDynamic, state, provider }) => {
     const { nombre } = ctx.params;
     // const { fecha, personas } = ctx.params;
