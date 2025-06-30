@@ -12,6 +12,7 @@ const ASSISTANT_ID = process.env.ASSISTANT_ID ?? ''
 const userQueues = new Map();
 const userLocks = new Map(); // New lock mechanism
 
+const apiUrl  = '';
 /**
  * Function to process the user's message by sending it to the OpenAI API
  * and sending the response back to the user.
@@ -74,6 +75,31 @@ const welcomeFlow = addKeyword<BaileysProvider, MemoryDB>(EVENTS.WELCOME)
             await handleQueue(userId);
         }
     });
+const disponibilidadFlow = addKeyword<BaileysProvider,MemoryDB>('libros').
+    addAction(async (ctx, { flowDynamic, state, provider }) => {
+    const { fecha, personas } = ctx.params;
+
+    // Llama a tu API
+    const response = await fetch(`${apiUrl}?fecha=${fecha}&personas=${personas}`);
+    const data = await response.json();
+
+    if (data.horarios.length === 0) {
+        return ctx.send('No hay disponibilidad para esa fecha. ¿Quieres probar otro día?');
+    }
+
+    // Crea botones con enlaces a tu web
+    const buttons = data.horarios.map(({ hora, link }) => ({
+        text: `Reservar a las ${hora}`,
+        url: link
+    }));
+
+    ctx.send({
+        text: `¡Hay mesas disponibles! Elige un horario:`,
+        buttons
+    });
+
+})
+
 
 /**
  * Función principal que configura y inicia el bot
@@ -85,7 +111,7 @@ const main = async () => {
      * Flujo del bot
      * @type {import('@builderbot/bot').Flow<BaileysProvider, MemoryDB>}
      */
-    const adapterFlow = createFlow([welcomeFlow]);
+    const adapterFlow = createFlow([welcomeFlow,disponibilidadFlow]);
 
     /**
      * Proveedor de servicios de mensajería
@@ -111,6 +137,7 @@ const main = async () => {
         provider: adapterProvider,
         database: adapterDB,
     });
+
 
     httpInject(adapterProvider.server);
     httpServer(+PORT);
