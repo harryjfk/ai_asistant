@@ -79,6 +79,21 @@ const disponibilidadFlow = addKeyword<BaileysProvider,MemoryDB>('buscar').
     addAction(async (ctx, { flowDynamic, state, provider }) => {
     const query = ctx.body.toLowerCase().replace('buscar', '').trim(); // Ej: "buscar 1984"
 
+    if(query=="")
+    {
+        await flowDynamic([{body:'📚 Por favor introduzca correctamente el nombre del libro',}])
+        return ;
+    }
+
+
+    const resultados = [];
+
+    if (resultados.length === 0) {
+        await flowDynamic([{
+            body: '❌ No encontré libros con ese nombre. Prueba con otro término.'
+        }]);
+        return;
+    }
     // const { fecha, personas } = ctx.params;
     //
     // // Llama a tu API
@@ -101,13 +116,7 @@ const disponibilidadFlow = addKeyword<BaileysProvider,MemoryDB>('buscar').
     //
     //     footer: 'Responde con el número del libro'
     // });
-    await flowDynamic([{body:'📚 Libros disponibles:',buttons:[
-            {
-              body:'aaa'
 
-            }
-
-        ],}])
     // // Crea botones con enlaces a tu web
     // const buttons = data.horarios.map(({ hora, link }) => ({
     //     text: `Reservar a las ${hora}`,
@@ -120,6 +129,7 @@ const disponibilidadFlow = addKeyword<BaileysProvider,MemoryDB>('buscar').
     // });
 
 })
+
 
 
 /**
