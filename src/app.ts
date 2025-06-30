@@ -12,7 +12,7 @@ const ASSISTANT_ID = process.env.ASSISTANT_ID ?? ''
 const userQueues = new Map();
 const userLocks = new Map(); // New lock mechanism
 
-const apiUrl  = '';
+// const apiUrl  = '';
 /**
  * Function to process the user's message by sending it to the OpenAI API
  * and sending the response back to the user.
@@ -76,7 +76,7 @@ const welcomeFlow = addKeyword<BaileysProvider, MemoryDB>(EVENTS.WELCOME)
         }
     });
 const disponibilidadFlow = addKeyword<BaileysProvider,MemoryDB>('buscar').
-    addAction(async (ctx, { flowDynamic, state, provider }) => {
+    addAction(async (ctx, { flowDynamic }) => {
     const query = ctx.body.toLowerCase().replace('buscar', '').trim(); // Ej: "buscar 1984"
 
     if(query=="")
