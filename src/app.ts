@@ -77,7 +77,8 @@ const welcomeFlow = addKeyword<BaileysProvider, MemoryDB>(EVENTS.WELCOME)
     });
 const disponibilidadFlow = addKeyword<BaileysProvider,MemoryDB>('buscar').
     addAction(async (ctx, { flowDynamic, state, provider }) => {
-    const { nombre } = ctx.params;
+    const query = ctx.body.toLowerCase().replace('buscar', '').trim(); // Ej: "buscar 1984"
+
     // const { fecha, personas } = ctx.params;
     //
     // // Llama a tu API
@@ -85,7 +86,7 @@ const disponibilidadFlow = addKeyword<BaileysProvider,MemoryDB>('buscar').
     // const data = await response.json();
 
     // if (data.horarios.length === 0) {
-    console.log(nombre);
+    console.log(query);
     // const libros = [
     //     { titulo: 'Cien años de soledad', genero: 'ficcion' },
     //     { titulo: 'El arte de la guerra', genero: 'no-ficcion' }
