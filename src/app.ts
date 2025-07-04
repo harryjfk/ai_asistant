@@ -17,17 +17,34 @@ const userLocks = new Map(); // New lock mechanism
  * Function to process the user's message by sending it to the OpenAI API
  * and sending the response back to the user.
  */
-const processUserMessage = async (ctx, { flowDynamic, state, provider }) => {
+const processUserMessage = async (ctx, { flowDynamic, state, provider,gotoFlow }) => {
     await typing(ctx, provider);
     const mensaje = ctx.body;
-    const esBusqueda =
-        /(libro|buscar|tienen|quiero|dame|recomi[ée]ndame)\s+(.+)/i.test(mensaje) ||
-        /^[^0-9]+$/i.test(mensaje); // Si el mensaje no contiene números
 
-    if (esBusqueda) {
-        const terminoBusqueda = mensaje.replace(/(libro|buscar|tienen|quiero|dame|recomi[ée]ndame)/i, '').trim();
-        ctx.body = `buscar ${terminoBusqueda}`; // Normaliza a "buscar [término]"
-    }
+    //
+    // const {title,author} = JSON.parse(response1);
+    // // const esBusqueda = /(libro|buscar|tienen|quiero|dame|recomi[ée]ndame|necesito)\s*(.+)?/i.test(mensaje) ||
+    // //     /^[^0-9]+$/i.test(mensaje);
+    //
+    // console.log(prompt);
+    // if(title!="MundoLibro")
+    // {
+    //     console.log(response1);
+    //
+    // }
+
+    // if (esBusqueda) {
+    //     const terminoBusqueda = mensaje.replace(/(libro|buscar|tienen|quiero|dame|recomi[ée]ndame|necesito)/i, '').trim();
+    //
+    //     if (terminoBusqueda) {
+    //         // Redirige al flujo de disponibilidad con el término de búsqueda
+    //         ctx.body = `buscar ${terminoBusqueda}`;
+    //         return gotoFlow(disponibilidadFlow);
+    //     } else {
+    //         await flowDynamic([{ body: '🔍 Por favor, dime qué libro estás buscando. Ejemplo: "buscar Cien años de soledad"' }]);
+    //         return;
+    //     }
+    // }
 
     const response = await toAsk(ASSISTANT_ID, ctx.body, state);
 
@@ -38,12 +55,16 @@ const processUserMessage = async (ctx, { flowDynamic, state, provider }) => {
         const cleanedChunk = chunk.trim().replace(/【.*?】[ ] /g, "");
         await flowDynamic([{ body: cleanedChunk }]);
     }
+//     console.log(mensaje);
+//     const prompt = `
+// `;
+    // const response1 = await toAsk(ASSISTANT_ID, prompt,state);
 };
 
 /**
  * Function to handle the queue for each user.
  */
-const handleQueue = async (userId) => {
+const handleQueue = async (userId,gotoFlow) => {
     const queue = userQueues.get(userId);
     
     if (userLocks.get(userId)) {
@@ -54,7 +75,7 @@ const handleQueue = async (userId) => {
         userLocks.set(userId, true); // Lock the queue
         const { ctx, flowDynamic, state, provider } = queue.shift();
         try {
-            await processUserMessage(ctx, { flowDynamic, state, provider });
+            await processUserMessage(ctx, { flowDynamic, state, provider ,gotoFlow});
         } catch (error) {
             console.error(`Error processing message for user ${userId}:`, error);
         } finally {
@@ -71,7 +92,7 @@ const handleQueue = async (userId) => {
  * @type {import('@builderbot/bot').Flow<BaileysProvider, MemoryDB>}
  */
 const welcomeFlow = addKeyword<BaileysProvider, MemoryDB>(EVENTS.WELCOME)
-    .addAction(async (ctx, { flowDynamic, state, provider }) => {
+    .addAction(async (ctx, { flowDynamic, state, provider, gotoFlow }) => {
         const userId = ctx.from; // Use the user's ID to create a unique queue for each user
 
         if (!userQueues.has(userId)) {
@@ -79,17 +100,20 @@ const welcomeFlow = addKeyword<BaileysProvider, MemoryDB>(EVENTS.WELCOME)
         }
 
         const queue = userQueues.get(userId);
-        queue.push({ ctx, flowDynamic, state, provider });
+        queue.push({ ctx, flowDynamic, state, provider, gotoFlow });
 
         // If this is the only message in the queue, process it immediately
         if (!userLocks.get(userId) && queue.length === 1) {
-            await handleQueue(userId);
+            await handleQueue(userId,gotoFlow);
         }
     });
 const disponibilidadFlow = addKeyword<BaileysProvider,MemoryDB>('buscar').
-    addAction(async (ctx, { flowDynamic }) => {
+    addAction(async (ctx, { flowDynamic,state }) => {
     const query = ctx.body.toLowerCase().replace('buscar', '').trim(); // Ej: "buscar 1984"
-
+    const prompt = `Extrae título y autor de: "${query}". Devuelve JSON. Ejemplo: {"title":"...","author":"..."}`;
+    const response = await toAsk(ASSISTANT_ID, prompt,state);
+    // JSON.parse(response);
+    console.log(response);
     if(query=="")
     {
         await flowDynamic([{body:'📚 Por favor introduzca correctamente el nombre del libro',}])
